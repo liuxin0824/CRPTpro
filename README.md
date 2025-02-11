@@ -3,4 +3,4 @@
 
 2024/8   Under third round of views.
 
-The implementation will be be organized and provided soon after publication.
+The implementation will be be organized and provided after publication.
