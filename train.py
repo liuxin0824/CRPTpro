@@ -134,14 +134,14 @@ class Workspace(object):
             avg_episode_reward += episode_reward
             self.eval_video_recorder.save(f'{self.step}.mp4')
         avg_episode_reward /= self.cfg.num_eval_episodes
-        self.logger.log('eval/episode_reward', avg_episode_reward, self.step)
-        self.logger.dump(self.step, ty='eval')
+        self.logger.log('eval/episode_reward', avg_episode_reward, self.step - self.cfg.num_expl_steps)
+        self.logger.dump(self.step - self.cfg.num_expl_steps, ty='eval')
 
     def run(self):
         episode, episode_reward, episode_step = 0, 0, 0
         start_time = time.time()
         done = True
-        training_count = 16666   #
+        training_count = 16666   # 16666 in each domain, totally 49998(50000) in three domains
         print('--------- collect random data: 200k steps for each domain (100k transitions with action repeat as 2)')
         
         while self.step <= self.cfg.num_train_steps:
@@ -153,7 +153,7 @@ class Workspace(object):
                     self.logger.log('train/fps', fps, self.step - self.cfg.num_expl_steps)
                     start_time = time.time()
                     self.logger.log('train/episode_reward', episode_reward, self.step - self.cfg.num_expl_steps)
-                    self.logger.log('train/episode', episode, self.step - self.cfg.num_expl_steps)
+                    self.logger.log('train/episode', episode - self.cfg.num_expl_steps/1000, self.step - self.cfg.num_expl_steps)
                     self.logger.dump(self.step - self.cfg.num_expl_steps, ty='train')
 
                 time_step = self.env.reset()
@@ -173,7 +173,7 @@ class Workspace(object):
             replay_buffer = self.get_buffer()
             # evaluate agent periodically
             if self.step % self.cfg.eval_frequency == 0 and self.step >= self.cfg.num_expl_steps:
-                self.logger.log('eval/episode', episode - 1, self.step - self.cfg.num_expl_steps)
+                self.logger.log('eval/episode', episode - 1- self.cfg.num_expl_steps/1000, self.step - self.cfg.num_expl_steps)
                 self.evaluate()
 
             # save agent periodically
@@ -220,7 +220,7 @@ class Workspace(object):
                     agent.update(self.expl_buffer_2,2)
                     agent.update(self.expl_buffer_3,2)
                     if index%1000==0:
-                        print('training steps:',index)
+                        print('training steps:',index*3,' / ', 50000)
                 print('------- pre-training over')
                 print('------- downstream RL')
 

@@ -22,7 +22,7 @@ save_model: true
 save_buffer: false
 save_pixels: false
 save_frequency: 10000
-device: 3
+device: 2
 
 load_pretrained: false
 pretrained_step: 250000
@@ -97,7 +97,7 @@ experiment: bench
 hydra:
   name: ${env}
   run:
-    dir: ./exp_local/${now:%Y.%m.%d}/${now:%H%M%S}_${env}_${env_2}_${env_3}_${hydra.job.override_dirname}
+    dir: ./exp_local/${now:%Y.%m.%d}/${now:%H%M%S}_${env}_${env_2}_${env_3}_${hydra.job.override_dirname}CRPT
   sweep:
     dir: ./exp/${now:%Y.%m.%d}/${now:%H%M%S}_${experiment}
     subdir: ${hydra.job.num}
