@@ -13,26 +13,22 @@ cd CRPTpro
 conda env create -f conda_env.yml
 ```
 
-Use tmux to create a terminal (optional):
+Use tmux to create a terminal (optional) and then enter the created conda environment:
 ```
 tmux
-```
 
-Then enter the created conda environment:
-
-```
 conda activate CRPTpro
 ```
 
 
-Run the experiments. The data collection, pre-training, and downstream RL are all included.
+Run the experiments. 
 
 ```
 python train.py
 ```
+The data collection, pre-training, and downstream RL are all included.
 
 
-Our code is built on [Proto-RL](https://github.com/denisyarats/proto).
 
 ## Citation
 
@@ -46,3 +42,6 @@ Our code is built on [Proto-RL](https://github.com/denisyarats/proto).
   publisher={IEEE}
 }
 ```
+
+## Acknowledgement
+This implementation is built on [Proto-RL](https://github.com/denisyarats/proto).
