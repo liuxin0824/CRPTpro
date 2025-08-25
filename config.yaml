@@ -6,9 +6,12 @@ frame_stack: 3
 action_repeat: 2
 # train
 num_train_steps: 350000 # 700k total env steps (200k random env steps (100k transitions) for pre-training data and 500k env steps for donwstream task)
-num_expl_steps: 100000 # 100k random transitions (200k random env steps)
+num_expl_steps: 100000 # 100k random transitions (200k random env steps with action repeat set to 2)
+# total env steps = num_train_steps * action_repeat = 350k*2 = 700k
+# downstream RL steps = total env steps - decoupled random collection env steps = 700k - 200k = 500k
+
 num_random_steps: 1000
-replay_buffer_capacity: 100000  #random data buffer
+replay_buffer_capacity: 100000  #decoupled random collection data buffer
 replay_buffer_capacity_task: 40000    # donwstream RL buffer
 seed: 1
 # eval
