@@ -66,12 +66,13 @@ class Workspace(object):
             float(action_spec.minimum.min()),
             float(action_spec.maximum.max())
         ]
-        # exploration agent uses intrinsic reward
+        # only for encoder pre-training
         self.expl_agent = hydra.utils.instantiate(cfg.agent,
                                                   task_agnostic=True)
         # task agent uses extr extrinsic reward
         self.task_agent = hydra.utils.instantiate(cfg.agent,
                                                   task_agnostic=False)
+        # employ the pre-trained encoder for task-specific agent
         self.task_agent.assign_modules_from_noactor(self.expl_agent)
 
         

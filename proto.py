@@ -417,12 +417,12 @@ class ProtoAgent(object):
                                          self.encoder_target_tau)
 
         with torch.no_grad():
-            intr_reward = self.compute_reward(next_obs, step)
+            expl_reward = self.compute_reward(next_obs, step)
 
         if self.task_agnostic:
-            reward = intr_reward
+            reward = expl_reward   #  not used in practice, only pretrain encoder with random data
         else:
-            reward = extr_reward + self.intr_coef * intr_reward
+            reward = extr_reward + self.intr_coef * expl_reward
 
         # decouple representation
         if not self.task_agnostic:
