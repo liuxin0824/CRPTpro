@@ -5,8 +5,8 @@ env_3: quadruped_run   # domain3
 frame_stack: 3
 action_repeat: 2
 # train
-num_train_steps: 350000 # 700k total env steps (200k random data steps (100k transitions) for pre-training and 500k steps for donwstream task)
-num_expl_steps: 100000 # 100k random transitions (2 * 100000)
+num_train_steps: 350000 # 700k total env steps (200k random env steps (100k transitions) for pre-training data and 500k env steps for donwstream task)
+num_expl_steps: 100000 # 100k random transitions (200k random env steps)
 num_random_steps: 1000
 replay_buffer_capacity: 100000  #random data buffer
 replay_buffer_capacity_task: 40000    # donwstream RL buffer
@@ -17,12 +17,12 @@ num_eval_episodes: 10
 # misc
 log_frequency_step: 10000
 log_save_tb: true
-save_video: true
-save_model: true
+save_video: false
+save_model: false
 save_buffer: false
 save_pixels: false
 save_frequency: 10000
-device: 2
+device: 0
 
 load_pretrained: false
 pretrained_step: 250000

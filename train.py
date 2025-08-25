@@ -132,7 +132,7 @@ class Workspace(object):
                 episode_step += 1
 
             avg_episode_reward += episode_reward
-            self.eval_video_recorder.save(f'{self.step}.mp4')
+            self.eval_video_recorder.save(f'{self.step - self.cfg.num_expl_steps}.mp4')
         avg_episode_reward /= self.cfg.num_eval_episodes
         self.logger.log('eval/episode_reward', avg_episode_reward, self.step - self.cfg.num_expl_steps)
         self.logger.dump(self.step - self.cfg.num_expl_steps, ty='eval')
@@ -153,7 +153,7 @@ class Workspace(object):
                     self.logger.log('train/fps', fps, self.step - self.cfg.num_expl_steps)
                     start_time = time.time()
                     self.logger.log('train/episode_reward', episode_reward, self.step - self.cfg.num_expl_steps)
-                    self.logger.log('train/episode', episode - self.cfg.num_expl_steps/1000, self.step - self.cfg.num_expl_steps)
+                    self.logger.log('train/episode', episode - self.cfg.num_expl_steps/500, self.step - self.cfg.num_expl_steps)
                     self.logger.dump(self.step - self.cfg.num_expl_steps, ty='train')
 
                 time_step = self.env.reset()
@@ -173,7 +173,7 @@ class Workspace(object):
             replay_buffer = self.get_buffer()
             # evaluate agent periodically
             if self.step % self.cfg.eval_frequency == 0 and self.step >= self.cfg.num_expl_steps:
-                self.logger.log('eval/episode', episode - 1- self.cfg.num_expl_steps/1000, self.step - self.cfg.num_expl_steps)
+                self.logger.log('eval/episode', episode - 1- self.cfg.num_expl_steps/500, self.step - self.cfg.num_expl_steps)
                 self.evaluate()
 
             # save agent periodically

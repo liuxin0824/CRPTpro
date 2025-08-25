@@ -134,36 +134,18 @@ class Proto(nn.Module):
             scores_t = self.protos(t)
             q_t = self.sinkhorn(scores_t)
 
-        
-        
+        loss_comp = -(q_t * log_p_s).sum(dim=1).mean()
 
-        loss = -(q_t * log_p_s).sum(dim=1).mean()
-
-        #index = random.randint(0,511)
         all_prototype = C.detach()
-        
-        #random_prototype = random_prototype.unsqueeze(0)
+
 
         scores_all_proto = self.protos(all_prototype)
         scores_aknn_proto, _ = torch.topk(scores_all_proto, self.topk, dim=1, largest=True)
         scores_knn_proto = scores_aknn_proto[:, -1:]
-        #scores_all_proto_weight = scores_all_proto.clone().detach()+1.5
-
-        #scores_all_proto = scores_all_proto/scores_all_proto_weight
-        #log_all_score = F.softmax(scores_all_proto, dim=1)
         
-        ##loss_add = log_randomproto_score.squeeze()
-        
-
-        #for index in range(self.num_protos):
-            #scores_all_proto[index,index] = 0
-
-        #loss_add = scores_knn_proto.mean()
-        loss_add = scores_aknn_proto.mean()
-        
+        loss_intr = scores_knn_proto.mean()
         alpha=0.005
-
-        loss = loss+alpha*loss_add
+        loss = loss_comp+alpha*loss_intr
         
         return loss
 
@@ -185,23 +167,13 @@ class Proto(nn.Module):
             scores_t = self.protos(t)
             q_t = self.sinkhorn(scores_t)
 
-        
-        
+        loss_comp = -(q_t * log_p_s).sum(dim=1).mean()
 
-        loss = -(q_t * log_p_s).sum(dim=1).mean()
-
-        #index = random.randint(0,511)
         all_prototype = C.detach()
-        
-        #random_prototype = random_prototype.unsqueeze(0)
-
         scores_all_proto = self.protos(all_prototype)
         scores_all_proto_weight = scores_all_proto.clone().detach()+1.5
-
         scores_all_proto = scores_all_proto/scores_all_proto_weight
-        #log_all_score = F.softmax(scores_all_proto, dim=1)
         
-        ##loss_add = log_randomproto_score.squeeze()
         def del_tensor_ele(arr,index):
             arr1 = arr[0:index]
             arr2 = arr[index+1:]
@@ -210,15 +182,12 @@ class Proto(nn.Module):
         for index in range(self.num_protos):
             scores_all_proto[index,index] = 0
 
-        loss_add = scores_all_proto.mean()
+        loss_intr = scores_all_proto.mean()
 
-        
         alpha= 0.005
         beta = 1
-
         self.update_count = self.update_count +1 
-
-        loss = beta*loss+alpha*loss_add
+        loss = beta*loss_comp+alpha*loss_intr
 
         return loss
 
